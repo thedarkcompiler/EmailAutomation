@@ -7,6 +7,17 @@ using EmailAutomation.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.Listen(System.Net.IPAddress.Any, 80);
+
+    options.Listen(System.Net.IPAddress.Any, 443, listenOptions =>
+    {
+        listenOptions.UseHttps("/etc/letsencrypt/live/darkcompiler.de/fullchain.pem", "compilerdark.com");
+    });
+});
+
+
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
