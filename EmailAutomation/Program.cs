@@ -13,7 +13,7 @@ builder.WebHost.ConfigureKestrel(options =>
 
     options.Listen(System.Net.IPAddress.Any, 443, listenOptions =>
     {
-        listenOptions.UseHttps("/etc/letsencrypt/live/darkcompiler.de/fullchain.pem", "compilerdark.com");
+        listenOptions.UseHttps("/root/Documents/Projects/EmailAutomation/EmailAutomation/certificate.pfx", "compilerdark.com");
     });
 });
 
