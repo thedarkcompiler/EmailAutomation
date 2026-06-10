@@ -13,23 +13,23 @@
     <EditForm EditContext="senderEditContext" OnSubmit="SaveSenderDataAsync" FormName="saveSenderData">
         <h2>Sender Email</h2>
         <div class="form-floating mb-3">
-            <input class="form-control " @bind-Value="SenderInput.Email" id="SenderInput.Email" type="text" />
+            <input class="form-control " @bind-value="SenderInput.Email" id="SenderInput.Email" type="text" />
             <label class="form-label" for="SenderInput.Email">Email</label>
             <ValidationMessage For="() => SenderInput.Email" class="text-danger" />
         </div>
         <div class="form-floating mb-3">
-            <input class="form-control" @bind-Value="SenderInput.Password" id="SenderInput.Password" type="text" />
+            <input class="form-control" @bind-value="SenderInput.Password" id="SenderInput.Password" type="text" />
             <label class="form-label" for="SenderInput.Password">Password</label>
             <ValidationMessage For="() => SenderInput.Password" class="text-danger" />
         </div>
 
         <div class="form-floating mb-3">
-            <input class="form-control" @bind-Value="SenderInput.SmtpServer" id="smtpServer" type="text" />
+            <input class="form-control" @bind-value="SenderInput.SmtpServer" id="smtpServer" type="text" />
             <label class="form-label" for="smtpServer">SMTP Server</label>
             <ValidationMessage For="() => SenderInput.SmtpServer" class="text-danger" />
         </div>
         <div class="form-floating mb-3">
-            <input class="form-control" @bind-Value="SenderInput.Port" id="port" type="text" />
+            <input class="form-control" @bind-value="SenderInput.Port" id="port" type="text" />
             <label class="form-label" for="port">Port</label>
             <ValidationMessage For="() => SenderInput.Port" class="text-danger" />
         </div>
@@ -47,11 +47,11 @@
         <StatusMessage Message="@errorMessage"/>
         <EditForm EditContext="receiverEditContext" FormName="addReceiver" OnSubmit="AddReceiver">
             <div class="form-floating mb-3">
-                <input class="form-control" @bind-Value="ReceiverInput.Name" id="ReceiverInput.Name" type="text"/>
+                <input class="form-control" @bind-value="ReceiverInput.Name" id="ReceiverInput.Name" type="text"/>
                 <label class="form-label" for="ReceiverInput.Name">Name</label>
             </div>
             <div class="form-floating mb-3">
-                <input class="form-control" @bind-Value="ReceiverInput.Email" id="ReceiverInput.Email" type="text"/>
+                <input class="form-control" @bind-value="ReceiverInput.Email" id="ReceiverInput.Email" type="text"/>
                 <label class="form-label" for="ReceiverInput.Email">Email</label>
             </div>
             <div class="form-floating mb-3">
