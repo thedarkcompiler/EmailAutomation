@@ -1,7 +1,21 @@
 ﻿@page "/"
+@using EmailAutomation.Services
+@using Hangfire
+
+@inject IJobService JobService
 
 <PageTitle>Home</PageTitle>
 
 <h1>Hello, world!</h1>
 
 Welcome to your new app.
+
+
+@code{
+
+    protected override void OnInitialized()
+    {
+        JobService.CreateJob();
+    }
+    
+}

@@ -4,9 +4,13 @@ using Microsoft.EntityFrameworkCore;
 using EmailAutomation.Components;
 using EmailAutomation.Components.Account;
 using EmailAutomation.Data;
+using EmailAutomation.Services;
+using Hangfire;
+using Hangfire.Storage.SQLite;
 
 var builder = WebApplication.CreateBuilder(args);
 
+#if LINUX 
 builder.WebHost.ConfigureKestrel(options =>
 {
     options.Listen(System.Net.IPAddress.Any, 80);
@@ -16,7 +20,16 @@ builder.WebHost.ConfigureKestrel(options =>
         listenOptions.UseHttps("/root/Documents/Projects/EmailAutomation/EmailAutomation/certificate.pfx", "compilerdark.com");
     });
 });
+#endif
 
+
+// hangfire config
+builder.Services.AddHangfire((sp, config) =>
+{
+    config.UseSimpleAssemblyNameTypeSerializer()
+        .UseRecommendedSerializerSettings()
+        .UseSQLiteStorage();
+});
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
@@ -50,6 +63,9 @@ builder.Services.AddIdentityCore<ApplicationUser>(options =>
 
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
+// Add application services.
+builder.Services.AddSingleton<IJobService, JobService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -63,6 +79,11 @@ else
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
+// hangfire
+app.UseHangfireServer();
+app.UseHangfireDashboard();
+
 
 app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
 app.UseHttpsRedirection();

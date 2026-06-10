@@ -1,0 +1,149 @@
+@page "/Emails"
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Authorization
+
+@inject ILogger<Emails> Logger
+@attribute [Authorize]
+
+<PageTitle>Home</PageTitle>
+
+<h1>Emails</h1>
+
+<div>
+    <EditForm EditContext="senderEditContext" OnSubmit="SaveSenderDataAsync" FormName="saveSenderData">
+        <h2>Sender Email</h2>
+        <div class="form-floating mb-3">
+            <input class="form-control " @bind-Value="SenderInput.Email" id="SenderInput.Email" type="text" />
+            <label class="form-label" for="SenderInput.Email">Email</label>
+            <ValidationMessage For="() => SenderInput.Email" class="text-danger" />
+        </div>
+        <div class="form-floating mb-3">
+            <input class="form-control" @bind-Value="SenderInput.Password" id="SenderInput.Password" type="text" />
+            <label class="form-label" for="SenderInput.Password">Password</label>
+            <ValidationMessage For="() => SenderInput.Password" class="text-danger" />
+        </div>
+
+        <div class="form-floating mb-3">
+            <input class="form-control" @bind-Value="SenderInput.SmtpServer" id="smtpServer" type="text" />
+            <label class="form-label" for="smtpServer">SMTP Server</label>
+            <ValidationMessage For="() => SenderInput.SmtpServer" class="text-danger" />
+        </div>
+        <div class="form-floating mb-3">
+            <input class="form-control" @bind-Value="SenderInput.Port" id="port" type="text" />
+            <label class="form-label" for="port">Port</label>
+            <ValidationMessage For="() => SenderInput.Port" class="text-danger" />
+        </div>
+        <div class="form-floating mb-3">
+            <input class="btn-primary btn-lg btn w-100" type="submit" value="Save" />
+        </div>
+    </EditForm>
+    
+</div>
+
+
+<div>
+    <h2>Receivers Email</h2>
+    <div>
+        <StatusMessage Message="@errorMessage"/>
+        <EditForm EditContext="receiverEditContext" FormName="addReceiver" OnSubmit="AddReceiver">
+            <div class="form-floating mb-3">
+                <input class="form-control" @bind-Value="ReceiverInput.Name" id="ReceiverInput.Name" type="text"/>
+                <label class="form-label" for="ReceiverInput.Name">Name</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input class="form-control" @bind-Value="ReceiverInput.Email" id="ReceiverInput.Email" type="text"/>
+                <label class="form-label" for="ReceiverInput.Email">Email</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input class="btn-primary btn-lg btn w-100" type="submit" value="Add"/>
+            </div>
+        </EditForm>
+    </div>
+    
+    <div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Email</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var receiver in Receivers)
+            {
+                <tr>
+                    <th scope="row">@receiver.Id</th>
+                    <td>@receiver.Name</td>
+                    <td>@receiver.Email</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+@code {
+    private string? errorMessage;
+    private EditContext senderEditContext = default!;
+    private EditContext receiverEditContext = default!;
+    
+    private SenderInputModel SenderInput { get; set; } = new();
+    private ReceiverInputModel ReceiverInput { get; set; } = new();
+    private List<ReceiverInputModel> Receivers { get; set; } = new();
+    
+    protected override async Task OnInitializedAsync()
+    {
+        SenderInput = new();
+        ReceiverInput = new();
+        senderEditContext = new(SenderInput);
+        receiverEditContext = new(ReceiverInput);
+    }
+    
+
+    public async Task SaveSenderDataAsync()
+    {
+        Console.WriteLine($"SaveSenderDataAsync: {SenderInput.Email}");
+    }
+
+    private void AddReceiver()
+    {
+        var id = Receivers.Count + 1;
+        ReceiverInput.Id = id;
+        
+        Receivers.Add(ReceiverInput);
+        ReceiverInput = new();
+        
+        Logger.LogInformation($"AddReceiver: {id}");    
+    }
+    
+
+    private sealed class SenderInputModel
+    {
+        [Required] [EmailAddress] public string Email { get; set; } = "";
+        
+        [Required] 
+        [DataType(dataType: DataType.Password)]
+        public string Password { get; set; } = "";
+        
+        [Required] 
+        public string SmtpServer { get; set; } = "";
+        
+        [Required] 
+        public int Port { get; set; }
+    }
+
+    private sealed class ReceiverInputModel
+    {
+        [Key] public int Id { get; set; }
+        [Required] public string Name { get; set; } = "";
+        [Required] [EmailAddress] public string Email { get; set; } = "";
+    }
+
+    private void SaveSenderData(EditContext obj)
+    {
+        throw new NotImplementedException();
+    }
+
+}
