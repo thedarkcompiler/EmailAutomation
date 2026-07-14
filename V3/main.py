@@ -75,8 +75,19 @@ MAX_RECIPIENTS = int(os.getenv("MAX_RECIPIENTS"))
 with open("recipients.json", "r") as f:
     recipients = json.load(f)
 
-with open("sent.json", "r") as f:
-    sent_history = json.load(f)
+SENT_FILE = "sent.json"
+
+if os.path.exists(SENT_FILE):
+    try:
+        with open(SENT_FILE, "r") as f:
+            sent_history = json.load(f)
+    except json.JSONDecodeError:
+        logger.warning(
+            "sent.json is invalid. Creating a new history file."
+        )
+        sent_history = {}
+else:
+    sent_history = {}
 
 if len(recipients) > MAX_RECIPIENTS:
     raise RuntimeError(
