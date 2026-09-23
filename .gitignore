@@ -1,5 +1,15 @@
-bin/
-obj/
-/packages/
-riderModule.iml
-/_ReSharper.Caches/
+# secrets & data
+.env
+recipients.json
+sent.json
+
+# logs & locks
+mailer.log
+mailer.lock
+*.log
+
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/

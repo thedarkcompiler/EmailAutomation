@@ -1,4 +1,0 @@
-# requirements.txt
-cryptography>=41.0.0
-keyring>=24.0.0
-pyinstaller>=6.0.0
